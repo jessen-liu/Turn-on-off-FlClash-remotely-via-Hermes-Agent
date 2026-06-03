@@ -13,7 +13,7 @@ REM Install: choco install powershell-core -y
 REM ============================================================
 
 setlocal
-set "SCRIPT=C:\Users\Administrator\.hermes\skills\flclash-toggle\scripts\flclash-toggle.ps1"
+set "SCRIPT=%USERPROFILE%\.hermes\skills\flclash-toggle\scripts\flclash-toggle.ps1"
 set "PWSH=C:\Program Files\PowerShell\7\pwsh.exe"
 
 if not exist "%PWSH%" (

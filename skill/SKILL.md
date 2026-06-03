@@ -7,7 +7,7 @@ description: 远程开关 FlClash（Windows 客户端）的代理通道。FlClas
 
 ## 这个 skill 解决什么
 
-爵爷的 FlClash 平时常驻托盘（开机自启），需要上国际网时点"启动"按钮 = 切系统代理。**远程**无法操作托盘。
+用户的 FlClash 平时常驻托盘（开机自启），需要上国际网时点"启动"按钮 = 切系统代理。**远程**无法操作托盘。
 
 本 skill **不模拟点击托盘**（脆弱），而是直接改 Windows 注册表里的 `ProxyEnable` —— FlClash 提前把 `ProxyServer=127.0.0.1:7890` 配好，只切这一位代理就启用/停用。
 
@@ -41,12 +41,12 @@ flclash 状态
 
 ```cmd
 :: 走 pwsh 7 (推荐, PS 5.1 解析器有 bug)
-"C:\Users\Administrator\.hermes\skills\flclash-toggle\scripts\flclash.bat" status
-"C:\Users\Administrator\.hermes\skills\flclash-toggle\scripts\flclash.bat" on
-"C:\Users\Administrator\.hermes\skills\flclash-toggle\scripts\flclash.bat" off
+"%USERPROFILE%\.hermes\skills\flclash-toggle\scripts\flclash.bat" status
+"%USERPROFILE%\.hermes\skills\flclash-toggle\scripts\flclash.bat" on
+"%USERPROFILE%\.hermes\skills\flclash-toggle\scripts\flclash.bat" off
 
 :: 走 pwsh 7 直接调
-"C:\Program Files\PowerShell\7\pwsh.exe" -NoProfile -ExecutionPolicy Bypass -File "C:\Users\Administrator\.hermes\skills\flclash-toggle\scripts\flclash-toggle.ps1" status
+"C:\Program Files\PowerShell\7\pwsh.exe" -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\.hermes\skills\flclash-toggle\scripts\flclash-toggle.ps1" status
 ```
 
 > ⚠️ **历史踩坑 1**：之前用的是 `/flclash on` 这种斜杠命令，**会和 Hermes 的管理命令系统冲突**（被识别为 `/flclash` 平台命令 → 报 "Unknown command /flclash"）。改成纯自然语言触发，不带斜杠，零歧义。
@@ -65,7 +65,7 @@ flclash 状态
 
 ## 前置条件（你必须先做一次）
 
-1. **FlClash 装在 `C:\Program Files\FlClash\FlClash.exe`**（已确认 ✅）
+1. **FlClash 装在 `C:\Program Files\FlClash\FlClash.exe`**（按你的安装路径调整）
 2. **FlClash 设为开机自启 + 最小化到托盘**（FlClash 设置里有"开机启动"选项）
 3. **第一次必须打开 FlClash GUI 点一次"启动"** —— 让 FlClash 把 `ProxyServer=127.0.0.1:7890` 写进注册表 + 让 core 启 mixed port
    - **不做这步的后果**：`on` 命令会在"前置端口检查"那里 abort 退出 2，告诉你"7890 没在 listen"。这是 v3 的预期行为 —— 不再做这步就别想 `on` 成功。
@@ -92,7 +92,7 @@ flclash 状态
 在干净 cmd 里跑：
 
 ```bash
-powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Users\Administrator\.hermes\skills\flclash-toggle\scripts\flclash-toggle.ps1" status
+powershell -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\.hermes\skills\flclash-toggle\scripts\flclash-toggle.ps1" status
 ```
 
 应输出（正常 UP 状态）：
@@ -112,11 +112,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Users\Administrator\.her
 
 ## 关键发现（背景）
 
-- FlClash 仓库 `chen08209/FlClash` ⭐40.9k（**注意：不是 fork，是上游** —— 爵爷给的链接 star 数对得上）
+- FlClash 仓库 `chen08209/FlClash` ⭐40.9k（**注意：不是 fork，是上游** —— 上游 GitHub 链接的 star 数对得上）
 - `FlClash.exe` (71KB) 是 Flutter GUI
 - `FlClashCore.exe` (45.5MB) 是 ClashMeta Go 核心（panic stack trace 显示 `D:/a/FlClash/FlClash/core/server.go`，确认是 ClashMeta）
-- `FlClashHelperService.exe` 没在跑 → **TUN 模式未启用** → 爵爷用的是 **系统代理模式**（ProxyEnable 控制）
-- **7890 端口是真 listen 监听**（不是 lazy）。v3 之前的脚本里"爵爷家里 7890 端口可能 lazy listen，别用端口测当判据"是**错的** —— 实测 `WinError 10061` 就是没人 listen，跟 lazy 无关。v3 改成"以端口 listen 为硬判据"。
+- `FlClashHelperService.exe` 没在跑 → **TUN 模式未启用** → 本 skill 假设使用 **系统代理模式**（ProxyEnable 控制）
+- **7890 端口是真 listen 监听**（不是 lazy）。v3 之前的脚本里"7890 端口可能 lazy listen，别用端口测当判据"是**错的** —— 实测 `WinError 10061` 就是没人 listen，跟 lazy 无关。v3 改成"以端口 listen 为硬判据"。
 - **PowerShell 5.1 兼容性坑（重要！）**：PS 5.1 解析器对以下**任意一种**都会误报"缺右大括号"（实际语法正确）：
   - `function Foo { ... 复杂函数体 ... }` 嵌套（v2 写法）
   - `switch ($x) { "case" { ... exit ... } "next" { ... } }` 多个 case + exit 组合（v3 写法）

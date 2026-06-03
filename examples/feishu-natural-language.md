@@ -1,7 +1,7 @@
 # Natural language phrases for Feishu DM
 
-Phrases tested in production with the 柏拉图 (Plato) agent. Chinese preferred
-because the user (爵爷) is Chinese-speaking. Add English variants if your
+Phrases tested in production with a Chinese chat agent. Chinese preferred
+because the user is Chinese-speaking. Add English variants if your
 audience is mixed.
 
 ## on (turn proxy on)

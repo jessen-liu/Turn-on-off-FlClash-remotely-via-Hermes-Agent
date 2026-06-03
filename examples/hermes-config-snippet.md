@@ -13,7 +13,7 @@ The natural-language phrases you should send in Feishu DM (or Telegram, etc.):
 
 Hermes invokes the script via:
 ```cmd
-"C:\Users\Administrator\.hermes\skills\flclash-toggle\scripts\flclash.bat" on
+"%USERPROFILE%\.hermes\skills\flclash-toggle\scripts\flclash.bat" on
 ```
 
 The wrapper locates `pwsh.exe` automatically. Output is pasted back to the chat
