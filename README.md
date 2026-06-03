@@ -4,6 +4,8 @@ Remote on/off control for [FlClash](https://github.com/chen08209/FlClash) proxy 
 
 > **TL;DR** — You operate FlClash GUI once to import your subscription, then drive the proxy on/off from any chat client by sending the right phrase.
 
+[中文版 →](./README.zh-CN.md)
+
 ---
 
 ## What this does
@@ -230,7 +232,8 @@ If you must use PS 5.1, expect to spend hours chasing ghost parse errors. Instal
 
 ```
 flclash-remote-toggle/
-├── README.md                     ← you are here
+├── README.md                     ← English (you are here)
+├── README.zh-CN.md               ← 中文版
 ├── LICENSE                       ← MIT
 ├── skill/                        ← drop these into your path
 │   ├── SKILL.md                  ← machine-readable spec
